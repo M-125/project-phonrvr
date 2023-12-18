@@ -1,0 +1,118 @@
+[gd_scene load_steps=8 format=2]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node2D
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	print(ARVRServer.get_interfaces())
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	$Label.text=str($Timer.time_left)
+	pass
+
+
+func _on_Timer_timeout():
+	get_tree().change_scene(\"res://world.tscn\")
+	pass # Replace with function body.
+"
+
+[sub_resource type="NoiseTexture" id=4]
+height = 600
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 256, 300 )
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends TouchScreenButton
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+func _on_TouchScreenButton_pressed():
+	Global.vr=true
+	get_tree().change_scene(\"res://world.tscn\")
+	pass # Replace with function body.
+"
+
+[sub_resource type="OpenSimplexNoise" id=5]
+
+[sub_resource type="NoiseTexture" id=6]
+height = 600
+noise = SubResource( 5 )
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends TouchScreenButton
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+func _on_TouchScreenButton_pressed():
+	Global.vr=true
+	Global.nolook=true
+	get_tree().change_scene(\"res://world.tscn\")
+	pass # Replace with function body.
+"
+
+[node name="Node2D" type="Node2D"]
+script = SubResource( 3 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="."]
+normal = SubResource( 4 )
+shape = SubResource( 1 )
+script = SubResource( 2 )
+
+[node name="TouchScreenButton2" type="TouchScreenButton" parent="."]
+position = Vector2( 539, 0 )
+normal = SubResource( 6 )
+shape = SubResource( 1 )
+script = SubResource( 7 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[node name="Label" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+rect_scale = Vector2( 3, 3 )
+text = "vgfdvf"
+
+[connection signal="pressed" from="TouchScreenButton" to="TouchScreenButton" method="_on_TouchScreenButton_pressed"]
+[connection signal="pressed" from="TouchScreenButton2" to="TouchScreenButton2" method="_on_TouchScreenButton_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
