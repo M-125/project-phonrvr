@@ -1,7 +1,7 @@
 extends MeshInstance
 var connections=[[15, 21], [16, 20], [18, 20],  [14, 16], [23, 25], [28, 30], [11, 23], [27, 31],  [15, 17], [24, 26], [16, 22],  [29, 31], [12, 24], [23, 24],    [11, 13], [30, 32], [28, 32], [15, 19], [16, 18], [25, 27], [26, 28], [12, 14], [17, 19],  [11, 12], [27, 29], [13, 15]]
 var wait=0
-var fps=0
+var fps=10
 var z_array=[]
 
 onready var sphere=get_parent().get_node("sphere")
@@ -42,8 +42,8 @@ func _process(delta):
 		tween.interpolate_property(sphere,"translation:x",sphere.translation.x,(pos[0]+translation).x,0.3)
 		tween.interpolate_property(sphere,"translation:y",sphere.translation.y,(pos[0]+translation).y,0.3)
 		tween.interpolate_property(sphere,"translation:z",sphere.translation.z,z_average,3)
-		tween.interpolate_property(lhand,"translation",null,pos[15]+translation,0.3)
-		tween.interpolate_property(rhand,"translation",null,pos[16]+translation,0.3)
+		tween.interpolate_property(lhand,"translation",null,pos[15]+translation,2/fps)
+		tween.interpolate_property(rhand,"translation",null,pos[16]+translation,2/fps)
 		tween.start()
 		
 		for e in connections:
