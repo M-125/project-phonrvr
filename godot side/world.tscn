@@ -43,6 +43,7 @@ mesh = SubResource( 2 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.83324, 0.552912, 0, -0.552912, 0.83324, 0, 0, 0 )
+light_energy = 0.5
 
 [node name="Area" type="Area" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.49259, 1.43898 )

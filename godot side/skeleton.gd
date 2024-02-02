@@ -4,10 +4,17 @@ var wait=0
 var fps=10
 var z_array=[]
 
-onready var sphere=get_parent().get_node("sphere")
-onready var tween=get_parent().get_node("Tween")
-onready var lhand=get_parent().get_node("lhand")
-onready var rhand=get_parent().get_node("rhand")
+onready var sphere=get_node("sphere")
+onready var tween=get_node("Tween")
+
+
+onready var lshoulder=get_node("lshoulder")
+onready var rshoulder=get_node("rshoulder")
+onready var relbow=rshoulder.get_node("relbow")
+onready var lelbow=lshoulder.get_node("lelbow")
+onready var lhand=lelbow.get_node("lhand")
+onready var rhand=relbow.get_node("rhand")
+signal packet
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -33,17 +40,23 @@ func _process(delta):
 			
 			spos=Vector3(spos[0],spos[1],spos[2])/1000
 			spos=Vector3(2*spos.x,0,0)-spos
+			spos.z=clamp(spos.z,-1,1)
 			pos.push_back(spos)
 		var z_average=0
 		z_array.append((pos[0]+translation).z)
 		for e in z_array:
 			z_average+=e
 		z_average/=z_array.size()
-		tween.interpolate_property(sphere,"translation:x",sphere.translation.x,(pos[0]+translation).x,0.3)
-		tween.interpolate_property(sphere,"translation:y",sphere.translation.y,(pos[0]+translation).y,0.3)
+		tween.interpolate_property(sphere,"translation:x",sphere.translation.x,(pos[0]).x,0.3)
+		tween.interpolate_property(sphere,"translation:y",sphere.translation.y,(pos[0]).y,0.3)
 		tween.interpolate_property(sphere,"translation:z",sphere.translation.z,z_average,3)
-		tween.interpolate_property(lhand,"translation",null,pos[15]+translation,2/fps)
-		tween.interpolate_property(rhand,"translation",null,pos[16]+translation,2/fps)
+		
+		tween.interpolate_property(lhand,"translation",null,pos[15]-pos[13],2/fps)
+		tween.interpolate_property(rhand,"translation",null,pos[16]-pos[14],2/fps)
+		tween.interpolate_property(lelbow,"translation",null,pos[13]-pos[11],2/fps)
+		tween.interpolate_property(relbow,"translation",null,pos[14]-pos[12],2/fps)
+		tween.interpolate_property(lshoulder,"global_translation",null,to_global(pos[11]),2/fps)
+		tween.interpolate_property(rshoulder,"global_translation",null,to_global(pos[12]),2/fps)
 		tween.start()
 		
 		for e in connections:
@@ -52,6 +65,7 @@ func _process(delta):
 		var arrays = []
 		arrays.resize(ArrayMesh.ARRAY_MAX)
 		arrays[ArrayMesh.ARRAY_VERTEX] = vertices
+		emit_signal("packet",pos)
 #		arrays[ArrayMesh.ARRAY_INDEX]=connections
 		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINES, arrays)
 		if wait!=0:fps=1/wait

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://skeleton.gd" type="Script" id=1]
 [ext_resource path="res://Camera.gd" type="Script" id=2]
@@ -25,6 +25,11 @@ script/source = "extends Label3D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
+#	get_parent().size=rect_size*rect_scale
+	pass # Replace with function body.
+
+func _process(delta):
 	var ip=[]
 	for e in IP.get_local_addresses():
 		if e.begins_with(\"192.168\"):
@@ -34,10 +39,6 @@ func _ready():
 		if text!=\"\":
 			text+=\"\\n\"
 		text+=e
-#	get_parent().size=rect_size*rect_scale
-	pass # Replace with function body.
-
-func _process(delta):
 	global_translation.y=0.017
 "
 
@@ -49,12 +50,123 @@ size = Vector2( 1, 0.75 )
 
 [sub_resource type="CameraTexture" id=7]
 
-[sub_resource type="SphereShape" id=8]
-radius = 0.4
-
 [sub_resource type="SphereMesh" id=9]
 radius = 0.1
 height = 0.2
+
+[sub_resource type="GDScript" id=21]
+script/source = "extends Area
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	translation=translation.normalized()*0.75
+	pass
+"
+
+[sub_resource type="SphereShape" id=8]
+radius = 0.4
+
+[sub_resource type="GDScript" id=17]
+script/source = "extends Spatial
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	translation=Vector3()
+	look_at(get_parent().get_node(\"rhand\").global_translation,Vector3.UP)
+	pass
+"
+
+[sub_resource type="CylinderMesh" id=13]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.75
+
+[sub_resource type="GDScript" id=18]
+script/source = "extends Spatial
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	translation=Vector3()
+	look_at(get_parent().get_node(\"relbow\").global_translation,Vector3.UP)
+	pass
+
+"
+
+[sub_resource type="GDScript" id=19]
+script/source = "extends Spatial
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	translation=Vector3()
+	look_at(get_parent().get_node(\"lhand\").global_translation,Vector3.UP)
+	pass
+"
+
+[sub_resource type="GDScript" id=20]
+script/source = "extends Spatial
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	translation=Vector3()
+	look_at(get_parent().get_node(\"lelbow\").global_translation,Vector3.UP)
+	pass
+
+"
 
 [node name="plr" type="Spatial"]
 
@@ -64,50 +176,117 @@ material_override = SubResource( 1 )
 mesh = SubResource( 2 )
 script = ExtResource( 1 )
 
-[node name="sphere" type="MeshInstance" parent="."]
-transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.83856, 0 )
+[node name="sphere" type="MeshInstance" parent="Spatial"]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -1, -0.16144, 0 )
 mesh = SubResource( 3 )
+skeleton = NodePath("../..")
 
-[node name="Camera" type="Camera" parent="sphere"]
+[node name="Camera" type="Camera" parent="Spatial/sphere"]
 current = true
 fov = 117.0
 script = ExtResource( 2 )
 
-[node name="ARVROrigin" type="ARVROrigin" parent="sphere"]
+[node name="ARVROrigin" type="ARVROrigin" parent="Spatial/sphere"]
 script = ExtResource( 3 )
 
-[node name="ARVRCamera" type="ARVRCamera" parent="sphere/ARVROrigin"]
+[node name="ARVRCamera" type="ARVRCamera" parent="Spatial/sphere/ARVROrigin"]
 
-[node name="Label3D" type="Label3D" parent="sphere"]
+[node name="Label3D" type="Label3D" parent="Spatial/sphere"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.962097, 0 )
 text = "wedgudhsjdhsdjs"
 autowrap = true
 width = 100.0
 script = SubResource( 4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="sphere/Label3D"]
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/sphere/Label3D"]
 transform = Transform( 1, -8.74228e-08, -8.74228e-08, -8.74228e-08, -4.37114e-08, -1, 8.74228e-08, 1, -4.37114e-08, -2.66996e-24, 6.60478e-10, -0.0151105 )
 material_override = SubResource( 5 )
 mesh = SubResource( 6 )
 
-[node name="Sprite3D" type="Sprite3D" parent="sphere"]
+[node name="Sprite3D" type="Sprite3D" parent="Spatial/sphere"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.37114e-07, 0, -5 )
 texture = SubResource( 7 )
 
-[node name="Tween" type="Tween" parent="."]
+[node name="Tween" type="Tween" parent="Spatial"]
 
-[node name="rhand" type="Area" parent="."]
+[node name="rshoulder" type="Area" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3009, -2, 0 )
 
-[node name="CollisionShape" type="CollisionShape" parent="rhand"]
-shape = SubResource( 8 )
-
-[node name="MeshInstance" type="MeshInstance" parent="rhand"]
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/rshoulder"]
 mesh = SubResource( 9 )
 
-[node name="lhand" type="Area" parent="."]
+[node name="relbow" type="Area" parent="Spatial/rshoulder"]
+script = SubResource( 21 )
 
-[node name="CollisionShape" type="CollisionShape" parent="lhand"]
+[node name="CollisionShape" type="CollisionShape" parent="Spatial/rshoulder/relbow"]
 shape = SubResource( 8 )
 
-[node name="MeshInstance" type="MeshInstance" parent="lhand"]
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/rshoulder/relbow"]
 mesh = SubResource( 9 )
+
+[node name="rhand" type="Area" parent="Spatial/rshoulder/relbow"]
+script = SubResource( 21 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Spatial/rshoulder/relbow/rhand"]
+shape = SubResource( 8 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/rshoulder/relbow/rhand"]
+mesh = SubResource( 9 )
+
+[node name="Spatial" type="Spatial" parent="Spatial/rshoulder/relbow"]
+script = SubResource( 17 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="Spatial/rshoulder/relbow/Spatial"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.375 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+
+[node name="Spatial2" type="Spatial" parent="Spatial/rshoulder"]
+script = SubResource( 18 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="Spatial/rshoulder/Spatial2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.375 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../../relbow")
+
+[node name="lshoulder" type="Area" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3010, 0, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/lshoulder"]
+mesh = SubResource( 9 )
+
+[node name="lelbow" type="Area" parent="Spatial/lshoulder"]
+script = SubResource( 21 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Spatial/lshoulder/lelbow"]
+shape = SubResource( 8 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/lshoulder/lelbow"]
+mesh = SubResource( 9 )
+
+[node name="lhand" type="Area" parent="Spatial/lshoulder/lelbow"]
+script = SubResource( 21 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Spatial/lshoulder/lelbow/lhand"]
+shape = SubResource( 8 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/lshoulder/lelbow/lhand"]
+mesh = SubResource( 9 )
+
+[node name="Spatial" type="Spatial" parent="Spatial/lshoulder/lelbow"]
+script = SubResource( 19 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="Spatial/lshoulder/lelbow/Spatial"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.375 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+
+[node name="Spatial2" type="Spatial" parent="Spatial/lshoulder"]
+script = SubResource( 20 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="Spatial/lshoulder/Spatial2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.375 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../../lelbow")
+
+[connection signal="packet" from="Spatial" to="Spatial/rshoulder/relbow" method="_on_Spatial_packet"]
