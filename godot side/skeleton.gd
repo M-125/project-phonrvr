@@ -8,6 +8,13 @@ onready var sphere=get_node("sphere")
 onready var tween=get_node("Tween")
 
 
+onready var lleg=get_node("lleg")
+onready var rleg=get_node("rleg")
+onready var rknee=rleg.get_node("rknee")
+onready var lknee=lleg.get_node("lknee")
+onready var lankle=lknee.get_node("lankle")
+onready var rankle=rknee.get_node("rankle")
+
 onready var lshoulder=get_node("lshoulder")
 onready var rshoulder=get_node("rshoulder")
 onready var relbow=rshoulder.get_node("relbow")
@@ -22,6 +29,8 @@ signal packet
 var socket = PacketPeerUDP.new()
 
 func _ready():
+	mesh=null
+	connect("packet",Pm,"pack")
 	socket.listen(6000)
 	print(CameraServer.feeds())
 
@@ -51,23 +60,34 @@ func _process(delta):
 		tween.interpolate_property(sphere,"translation:y",sphere.translation.y,(pos[0]).y,0.3)
 		tween.interpolate_property(sphere,"translation:z",sphere.translation.z,z_average,3)
 		
-		tween.interpolate_property(lhand,"translation",null,pos[15]-pos[13],2/fps)
-		tween.interpolate_property(rhand,"translation",null,pos[16]-pos[14],2/fps)
-		tween.interpolate_property(lelbow,"translation",null,pos[13]-pos[11],2/fps)
-		tween.interpolate_property(relbow,"translation",null,pos[14]-pos[12],2/fps)
-		tween.interpolate_property(lshoulder,"global_translation",null,to_global(pos[11]),2/fps)
-		tween.interpolate_property(rshoulder,"global_translation",null,to_global(pos[12]),2/fps)
+		tween.interpolate_property(lhand,"translation",null,pos[15]-pos[13],1/fps)
+		tween.interpolate_property(rhand,"translation",null,pos[16]-pos[14],1/fps)
+		tween.interpolate_property(lelbow,"translation",null,pos[13]-pos[11],1/fps)
+		tween.interpolate_property(relbow,"translation",null,pos[14]-pos[12],1/fps)
+		tween.interpolate_property(lshoulder,"global_translation",null,to_global(pos[11]),1/fps)
+		tween.interpolate_property(rshoulder,"global_translation",null,to_global(pos[12]),1/fps)
+		
+		tween.interpolate_property(lknee,"translation",null,pos[25]-pos[23],1/fps)
+		tween.interpolate_property(rknee,"translation",null,pos[26]-pos[24],1/fps)
+		tween.interpolate_property(rankle,"translation",null,pos[28]-pos[26],1/fps)
+		tween.interpolate_property(lankle,"translation",null,pos[27]-pos[25],1/fps)
+		tween.interpolate_property(lleg,"global_translation",null,to_global(pos[23]),1/fps)
+		tween.interpolate_property(rleg,"global_translation",null,to_global(pos[24]),1/fps)
 		tween.start()
 		
-		for e in connections:
-			vertices.push_back(pos[e[0]])
-			vertices.push_back(pos[e[1]])
+		
+		vertices.push_back(pos[11])
+		vertices.push_back(pos[12])
+		vertices.push_back(pos[23])
+		vertices.push_back(pos[23])
+		vertices.push_back(pos[24])
+		vertices.push_back(pos[12])
 		var arrays = []
 		arrays.resize(ArrayMesh.ARRAY_MAX)
 		arrays[ArrayMesh.ARRAY_VERTEX] = vertices
 		emit_signal("packet",pos)
 #		arrays[ArrayMesh.ARRAY_INDEX]=connections
-		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINES, arrays)
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 		if wait!=0:fps=1/wait
 		wait=0
 	wait+=delta

@@ -17,3 +17,7 @@ func _input(event: InputEvent) -> void:
 			Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
 		elif event.pressed and event.scancode==KEY_Q:
 			Input.mouse_mode=Input.MOUSE_MODE_CAPTURED
+
+
+func _on_Spatial_packet():
+	pass # Replace with function body.

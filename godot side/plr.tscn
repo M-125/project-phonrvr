@@ -1,11 +1,12 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://skeleton.gd" type="Script" id=1]
 [ext_resource path="res://Camera.gd" type="Script" id=2]
 [ext_resource path="res://ARVROrigin.gd" type="Script" id=3]
 
-[sub_resource type="SpatialMaterial" id=1]
-albedo_color = Color( 1, 0, 0, 1 )
+[sub_resource type="SpatialMaterial" id=28]
+params_cull_mode = 2
+albedo_color = Color( 0.639216, 0.639216, 0.639216, 1 )
 
 [sub_resource type="CubeMesh" id=2]
 
@@ -55,7 +56,7 @@ radius = 0.1
 height = 0.2
 
 [sub_resource type="GDScript" id=21]
-script/source = "extends Area
+script/source = "extends Spatial
 
 
 # Declare member variables here. Examples:
@@ -76,6 +77,22 @@ func _process(delta):
 
 [sub_resource type="SphereShape" id=8]
 radius = 0.4
+
+[sub_resource type="GDScript" id=23]
+script/source = "extends Area
+
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	translation=translation.normalized()*0.75
+	global_rotation=get_parent().get_node(\"Spatial\").global_rotation
+	pass
+
+"
+
+[sub_resource type="CubeMesh" id=22]
+size = Vector3( 0.2, 0.1, 0.4 )
 
 [sub_resource type="GDScript" id=17]
 script/source = "extends Spatial
@@ -168,11 +185,98 @@ func _process(delta):
 
 "
 
+[sub_resource type="GDScript" id=27]
+script/source = "extends Spatial
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	translation=Vector3()
+	look_at(get_parent().get_node(\"rankle\").global_translation,Vector3.UP)
+	pass
+"
+
+[sub_resource type="GDScript" id=26]
+script/source = "extends Spatial
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	translation=Vector3()
+	look_at(get_parent().get_node(\"rknee\").global_translation,Vector3.UP)
+	pass
+
+"
+
+[sub_resource type="GDScript" id=24]
+script/source = "extends Spatial
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	translation=Vector3()
+	look_at(get_parent().get_node(\"lankle\").global_translation,Vector3.UP)
+	pass
+"
+
+[sub_resource type="GDScript" id=25]
+script/source = "extends Spatial
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	translation=Vector3()
+	look_at(get_parent().get_node(\"lknee\").global_translation,Vector3.UP)
+	pass
+
+"
+
 [node name="plr" type="Spatial"]
 
 [node name="Spatial" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2, 0 )
-material_override = SubResource( 1 )
+material_override = SubResource( 28 )
+cast_shadow = 0
 mesh = SubResource( 2 )
 script = ExtResource( 1 )
 
@@ -181,13 +285,14 @@ transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -1, -0.
 mesh = SubResource( 3 )
 skeleton = NodePath("../..")
 
-[node name="Camera" type="Camera" parent="Spatial/sphere"]
+[node name="ARVROrigin" type="ARVROrigin" parent="Spatial/sphere"]
+script = ExtResource( 3 )
+
+[node name="Camera" type="Camera" parent="Spatial/sphere/ARVROrigin"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.62268e-07, 0, 3 )
 current = true
 fov = 117.0
 script = ExtResource( 2 )
-
-[node name="ARVROrigin" type="ARVROrigin" parent="Spatial/sphere"]
-script = ExtResource( 3 )
 
 [node name="ARVRCamera" type="ARVRCamera" parent="Spatial/sphere/ARVROrigin"]
 
@@ -210,12 +315,13 @@ texture = SubResource( 7 )
 [node name="Tween" type="Tween" parent="Spatial"]
 
 [node name="rshoulder" type="Area" parent="Spatial"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3009, -2, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -2, 0 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Spatial/rshoulder"]
 mesh = SubResource( 9 )
 
 [node name="relbow" type="Area" parent="Spatial/rshoulder"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.5127 )
 script = SubResource( 21 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Spatial/rshoulder/relbow"]
@@ -225,13 +331,15 @@ shape = SubResource( 8 )
 mesh = SubResource( 9 )
 
 [node name="rhand" type="Area" parent="Spatial/rshoulder/relbow"]
-script = SubResource( 21 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.167467 )
+script = SubResource( 23 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Spatial/rshoulder/relbow/rhand"]
 shape = SubResource( 8 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Spatial/rshoulder/relbow/rhand"]
-mesh = SubResource( 9 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.16 )
+mesh = SubResource( 22 )
 
 [node name="Spatial" type="Spatial" parent="Spatial/rshoulder/relbow"]
 script = SubResource( 17 )
@@ -250,7 +358,7 @@ mesh = SubResource( 13 )
 skeleton = NodePath("../../relbow")
 
 [node name="lshoulder" type="Area" parent="Spatial"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3010, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Spatial/lshoulder"]
 mesh = SubResource( 9 )
@@ -265,13 +373,14 @@ shape = SubResource( 8 )
 mesh = SubResource( 9 )
 
 [node name="lhand" type="Area" parent="Spatial/lshoulder/lelbow"]
-script = SubResource( 21 )
+script = SubResource( 23 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Spatial/lshoulder/lelbow/lhand"]
 shape = SubResource( 8 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Spatial/lshoulder/lelbow/lhand"]
-mesh = SubResource( 9 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.16 )
+mesh = SubResource( 22 )
 
 [node name="Spatial" type="Spatial" parent="Spatial/lshoulder/lelbow"]
 script = SubResource( 19 )
@@ -289,4 +398,84 @@ transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -
 mesh = SubResource( 13 )
 skeleton = NodePath("../../lelbow")
 
-[connection signal="packet" from="Spatial" to="Spatial/rshoulder/relbow" method="_on_Spatial_packet"]
+[node name="rleg" type="Area" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3009, -2, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/rleg"]
+mesh = SubResource( 9 )
+
+[node name="rknee" type="Area" parent="Spatial/rleg"]
+script = SubResource( 21 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Spatial/rleg/rknee"]
+shape = SubResource( 8 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/rleg/rknee"]
+mesh = SubResource( 9 )
+
+[node name="rankle" type="Area" parent="Spatial/rleg/rknee"]
+script = SubResource( 21 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Spatial/rleg/rknee/rankle"]
+shape = SubResource( 8 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/rleg/rknee/rankle"]
+mesh = SubResource( 9 )
+
+[node name="Spatial" type="Spatial" parent="Spatial/rleg/rknee"]
+script = SubResource( 27 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="Spatial/rleg/rknee/Spatial"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.375 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+
+[node name="Spatial2" type="Spatial" parent="Spatial/rleg"]
+script = SubResource( 26 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="Spatial/rleg/Spatial2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.375 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../../rknee")
+
+[node name="lleg" type="Area" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3010, 0, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/lleg"]
+mesh = SubResource( 9 )
+
+[node name="lknee" type="Area" parent="Spatial/lleg"]
+script = SubResource( 21 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Spatial/lleg/lknee"]
+shape = SubResource( 8 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/lleg/lknee"]
+mesh = SubResource( 9 )
+
+[node name="lankle" type="Area" parent="Spatial/lleg/lknee"]
+script = SubResource( 21 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Spatial/lleg/lknee/lankle"]
+shape = SubResource( 8 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial/lleg/lknee/lankle"]
+mesh = SubResource( 9 )
+
+[node name="Spatial" type="Spatial" parent="Spatial/lleg/lknee"]
+script = SubResource( 24 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="Spatial/lleg/lknee/Spatial"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.375 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+
+[node name="Spatial2" type="Spatial" parent="Spatial/lleg"]
+script = SubResource( 25 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="Spatial/lleg/Spatial2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.375 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../../lknee")
+
+[connection signal="packet" from="Spatial" to="Spatial/sphere/ARVROrigin" method="_on_Spatial_packet"]
